@@ -1,0 +1,86 @@
+/* Card.css */
+.card {
+    display: flex;
+    margin-bottom: 1em;
+    border: 1px solid var(--shadow-extra-weak);
+    padding: 1.5em;
+    width: 100%;
+    max-width: 1200px;
+    height: 240px;
+    background-color: var(--primary);
+    box-shadow: var(--box-shadow);
+    box-sizing: border-box; /* Ensure padding and border are included in the width/height */
+    border-radius: 6px;
+}
+
+.card img {
+    margin-right: 1em;
+    box-shadow: 0 4px 6px var(--shadow-extra-weak);
+    max-width: 150px;
+    height: auto;
+    border-radius: 3px;
+    pointer-events: none;
+}
+
+.card img::selection {
+    background-color: transparent;
+}
+
+
+.card .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    min-width: 0; /* Allow flex items to shrink properly */
+    overflow: hidden; /* Prevent overflow */
+}
+
+.card .content .title {
+    font-size: 1.5em;
+    font-weight: 600;
+    /* more gap betwene letter */
+    letter-spacing: 0.033em;
+    margin-bottom: 0.25em;
+}
+
+.card .content .title .icon {
+    margin-left: 0.6em;
+    font-size: 0.75em;
+}
+
+.card .content .authors {
+    font-size: 1.1em;
+    font-weight: 400;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.card .content hr {
+    width: 100%;
+    margin: 0.5em 0;
+    border: none;
+    border-top: 1px solid var(--shadow-extra-weak);
+}
+
+.card .content .abstract {
+    display: -webkit-box;
+    text-align: justify;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.card .meta {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: auto;
+    text-align: right;
+}
