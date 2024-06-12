@@ -1,4 +1,4 @@
-const cardData = {
+const cardData = [{
     id: 1,
     title: 'Attention is All You Need',
     authors: ['Ashish Vaswani', 'Noam Shazeer', 'Niki Parmar', 'Jakob Uszkoreit', 'Llion Jones', 'Aidan N. Gomez', 'Lukasz Kaiser', 'Illia Polosukhin'],
@@ -8,6 +8,6 @@ const cardData = {
     thumbnailUrl: 'https://placehold.co/150x212',
     hidden: false,
     bookmarked: false,
-}
+}];
 
-export default cardData;
+module.exports = cardData;

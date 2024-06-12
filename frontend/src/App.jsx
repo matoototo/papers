@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 
 import Card from './components/Card'
-
-import cardData from './dummy/cardData'
 import { darkTheme, lightTheme } from './themes'
 
 import './App.css'
@@ -11,6 +9,8 @@ const App = () => {
     const [systemDarkMode, setSystemDarkMode] = useState(
         window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
     );
+
+    const [cardData, setCardData] = useState([]);
 
     useEffect(() => {
         const themeStyles = systemDarkMode ? darkTheme : lightTheme;
@@ -27,11 +27,18 @@ const App = () => {
         return () => mediaQuery.removeEventListener('change', handleChange);
     }, []);
 
+    useEffect(() => {
+        fetch('/api/papers')
+            .then(res => res.json())
+            .then(data => setCardData(data))
+            .catch(err => console.error(err));
+    }, []);
+
     return (
         <>
-        <Card {...cardData} />
-        <Card {...cardData} />
-        <Card {...cardData} />
+            {cardData.map((card, index) => (
+                <Card key={index} {...card} />
+            ))}
         </>
     )
 }
