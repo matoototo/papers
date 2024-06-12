@@ -9,7 +9,7 @@
     height: 240px;
     background-color: var(--primary);
     box-shadow: var(--box-shadow);
-    box-sizing: border-box; /* Ensure padding and border are included in the width/height */
+    box-sizing: border-box;
     border-radius: 6px;
 }
 
@@ -38,15 +38,25 @@
 }
 
 .card .content .title {
+    display: flex;
     font-size: 1.5em;
     font-weight: 600;
-    /* more gap betwene letter */
     letter-spacing: 0.033em;
     margin-bottom: 0.25em;
+    max-width: 100%;
+}
+
+.card .content .title .title-text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .card .content .title .icon {
     margin-left: 0.6em;
+    margin-right: 1.0em;
+    margin-bottom: 0.1em;
     font-size: 0.75em;
 }
 

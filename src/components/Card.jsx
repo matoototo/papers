@@ -12,7 +12,7 @@ const Card = ({ title, authors, abstract, date, url, thumbnailUrl, hidden, bookm
             <img src={thumbnailUrl} alt={title} />
             <div className="content">
                 <h2 className="title">
-                    {title}
+                    <span className="title-text">{title}</span>
                     <a href={url} target="_blank" rel="noreferrer">
                         <FontAwesomeIcon icon={faExternalLinkAlt} className="icon" />
                     </a>
