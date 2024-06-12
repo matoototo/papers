@@ -14,9 +14,10 @@
 }
 
 .card img {
-    margin-right: 1em;
+    margin-right: 1.5em;
     box-shadow: 0 4px 6px var(--shadow-extra-weak);
     max-width: 150px;
+    aspect-ratio: 1 / 1.4142;
     height: auto;
     border-radius: 3px;
     pointer-events: none;
@@ -40,8 +41,8 @@
 .card .content .title {
     display: flex;
     font-size: 1.5em;
-    font-weight: 600;
-    letter-spacing: 0.033em;
+    font-weight: 550;
+    letter-spacing: 0.05em;
     margin-bottom: 0.25em;
     max-width: 100%;
 }
@@ -69,6 +70,7 @@
     text-overflow: ellipsis;
     width: 100%;
     box-sizing: border-box;
+    line-height: 1.4;
 }
 
 .card .content hr {
@@ -91,6 +93,26 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: flex-end;
     margin-left: auto;
     text-align: right;
+    padding-left: 1em;
+}
+
+.card .meta .bookmark-icon {
+    font-size: 2.1em;
+    color: var(--secondary-highlight);
+    cursor: pointer;
+    transform: scaleY(2.5);
+    transition: color 0.4s, opacity 0.4s;
+}
+
+.card .meta .bookmark-icon:hover {
+    color: var(--warning);
+    opacity: 0.8;
+}
+
+.card .meta .bookmark-icon.bookmarked {
+    color: var(--warning);
+    opacity: 1.0;
 }

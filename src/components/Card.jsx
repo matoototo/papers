@@ -1,11 +1,17 @@
 // Card.jsx
+import { useState } from 'react';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark } from '@fortawesome/free-solid-svg-icons/faBookmark';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt';
 
 import '../styles/Card.css';
 
 const Card = ({ title, authors, abstract, date, url, thumbnailUrl, hidden, bookmarked }) => {
+    const [isBookmarked, setBookmarked] = useState(bookmarked);
+
     const authorsString = authors.join(', ');
+    const bookmarkClass = 'bookmark-icon' + (isBookmarked ? ' bookmarked' : '');
 
     return (
         <div className="card">
@@ -22,6 +28,7 @@ const Card = ({ title, authors, abstract, date, url, thumbnailUrl, hidden, bookm
                 <p className="abstract">{abstract}</p>
             </div>
             <div className="meta">
+                <FontAwesomeIcon icon={faBookmark} className={bookmarkClass} onClick={() => setBookmarked(!isBookmarked)} />
                 <p className="date">{date}</p>
             </div>
         </div>
