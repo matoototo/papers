@@ -32,23 +32,33 @@ const processThumbnailsTask = async (papers) => {
         let thumbnailPath = path.join('./thumbnails', `${paper.arxiv_id}.png`);
 
         // Download PDF temporarily
-        const pdfUrl = paper.url.replace('abs', 'pdf') + '.pdf';
-        const response = await axios.get(pdfUrl, { responseType: 'stream' });
-        const writer = fs.createWriteStream(pdfPath);
+        try {
+            const pdfUrl = paper.url.replace('abs', 'pdf').replace('arxiv.org', 'export.arxiv.org') + '.pdf';
+            const response = await axios.get(pdfUrl, { responseType: 'stream' });
+            const writer = fs.createWriteStream(pdfPath);
 
-        response.data.pipe(writer);
+            response.data.pipe(writer);
 
-        await new Promise((resolve, reject) => {
-            writer.on('finish', resolve);
-            writer.on('error', reject);
-        });
+            await new Promise((resolve, reject) => {
+                writer.on('finish', resolve);
+                writer.on('error', reject);
+            });
 
-        thumbnailPath = await generateThumbnail(pdfPath, thumbnailPath);
-        await db.updatePaperThumbnail(paper.id, thumbnailPath.replace('./thumbnails/', '/thumbnails/'));
+            if (!fs.existsSync(pdfPath)) {
+                throw new Error(`Failed to download PDF: ${pdfPath}`);
+            }
 
-        fs.unlinkSync(pdfPath);
+            thumbnailPath = await generateThumbnail(pdfPath, thumbnailPath);
+            await db.updatePaperThumbnail(paper.id, thumbnailPath.replace('./thumbnails/', '/thumbnails/'));
+
+            fs.unlinkSync(pdfPath);
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+        } catch (error) {
+            console.error(`Error processing paper ${paper.arxiv_id}:`, error);
+        }
     }
 };
+
 
 const thumbnailerTask = {
     fetch: fetchThumbnailsTask,
