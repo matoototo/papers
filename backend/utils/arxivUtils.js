@@ -5,7 +5,7 @@ const fetchArxivPapers = async (endTimestamp, categories = []) => {
     let results = [];
     let start = 0;
     const perRequest = 100;
-    const categoryQuery = categories.length > 0 ? `cat:${categories.join('+cat:')}` : '';
+    const categoryQuery = categories.length > 0 ? `cat:${categories.join('+cat:')}` : 'all';
     do {
         try {
             const query = `http://export.arxiv.org/api/query?search_query=${categoryQuery}&sortBy=submittedDate&sortOrder=descending&max_results=${start + perRequest}&start=${start}`;

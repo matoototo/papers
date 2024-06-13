@@ -7,7 +7,7 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons/faExternalL
 
 import '../styles/Card.css';
 
-const Card = ({ title, authors, abstract, date, url, thumbnailUrl, hidden, bookmarked }) => {
+const Card = ({ title, authors, abstract, date, url, thumbnail, hidden, bookmarked }) => {
     const [isBookmarked, setBookmarked] = useState(bookmarked);
 
     const authorsString = authors.join(', ');
@@ -15,7 +15,7 @@ const Card = ({ title, authors, abstract, date, url, thumbnailUrl, hidden, bookm
 
     return (
         <div className="card">
-            <img src={thumbnailUrl} alt={title} />
+            <img src={thumbnail} alt={title} />
             <div className="content">
                 <h2 className="title">
                     <span className="title-text">{title}</span>

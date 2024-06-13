@@ -21,7 +21,43 @@ const getPaperByArxivId = async (arxivId) => {
     return await db.oneOrNone('SELECT id FROM arxiv_metadata WHERE arxiv_id = $1', [arxivId]);
 };
 
+const getPapers = async (filters, page = 1, perPage = 20) => {
+    let whereClauses = [];
+    let values = [];
+    let orderByClause = '';
+    let offset = (page - 1) * perPage;
+
+    if (filters.timeSpan) {
+        whereClauses.push('date BETWEEN $1 AND $2');
+        values.push(filters.timeSpan.start);
+        values.push(filters.timeSpan.end);
+    }
+
+    if (filters.categories && filters.categories.length > 0) {
+        whereClauses.push('categories && $' + (values.length + 1) + '::text[]');
+        values.push(filters.categories);
+    }
+
+    if (filters.embedding) {
+        orderByClause = `ORDER BY abstract_embedding <=> $${values.length + 1}`;
+        values.push(filters.embedding);
+    } else {
+        orderByClause = 'ORDER BY date DESC';
+    }
+
+    let query = `
+        SELECT * FROM arxiv_metadata
+        ${whereClauses.length > 0 ? 'WHERE ' + whereClauses.join(' AND ') : ''}
+        ${orderByClause}
+        LIMIT $${values.length + 1} OFFSET $${values.length + 2}
+    `;
+    values.push(perPage, offset);
+
+    return await db.any(query, values);
+};
+
 module.exports = {
     insertPaper,
     getPaperByArxivId,
+    getPapers,
 };
