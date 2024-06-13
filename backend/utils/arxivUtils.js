@@ -8,7 +8,7 @@ const fetchArxivPapers = async (endTimestamp, categories = []) => {
     const categoryQuery = categories.length > 0 ? `cat:${categories.join('+cat:')}` : '';
     do {
         try {
-            const query = `http://export.arxiv.org/api/query?search_query=${categoryQuery}&sortBy=submittedDate&sortOrder=descending&max_results=${perRequest}&start=${start}`;
+            const query = `http://export.arxiv.org/api/query?search_query=${categoryQuery}&sortBy=submittedDate&sortOrder=descending&max_results=${start + perRequest}&start=${start}`;
             const response = await axios.get(query);
             results = results.concat(parseArxivResponse(response.data));
             start += perRequest;
@@ -25,7 +25,7 @@ const parseArxivResponse = (data) => {
     const papers = [];
 
     for (let entry of entries) {
-        const id = entry.getElementsByTagName('id')[0].textContent;
+        const id = entry.getElementsByTagName('id')[0].textContent.split('/').pop();
         const title = entry.getElementsByTagName('title')[0].textContent;
         const authors = Array.from(entry.getElementsByTagName('author')).map(author => author.getElementsByTagName('name')[0].textContent);
         const abstract = entry.getElementsByTagName('summary')[0].textContent;

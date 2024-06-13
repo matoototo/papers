@@ -19,6 +19,15 @@ const addTask = (cronExpression, taskFunctions, initialLastExecutionTime = new D
     tasks.push(task);
 };
 
+const runTaskOnce = async (taskFunctions, lastExecutionTime = new Date().toISOString()) => {
+    try {
+        const data = await taskFunctions.fetch(lastExecutionTime);
+        taskFunctions.process(data);
+    } catch (error) {
+        console.error('Task execution failed:', error);
+    }
+};
+
 const startAllTasks = () => {
     tasks.forEach(task => task.start());
 };
@@ -31,4 +40,5 @@ module.exports = {
     addTask,
     startAllTasks,
     stopAllTasks,
+    runTaskOnce,
 };

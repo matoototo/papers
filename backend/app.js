@@ -1,5 +1,4 @@
 // app.js
-
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -17,10 +16,11 @@ const PORT = process.env.PORT || 3001;
 
 app.use('/papers', papersRouter);
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     const lastExecutionTime = new Date();
     lastExecutionTime.setDate(lastExecutionTime.getDate() - 7);
-    taskScheduler.addTask("*/10 * * * *", arxivTask, lastExecutionTime.toISOString());
+    await taskScheduler.runTaskOnce(arxivTask, lastExecutionTime.toISOString());
+    taskScheduler.addTask("*/10 * * * *", arxivTask, new Date().toISOString());
     taskScheduler.startAllTasks();
 
     console.log(`Server is running on port ${PORT}`);
