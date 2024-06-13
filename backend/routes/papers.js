@@ -1,6 +1,6 @@
 // papers.js
 const express = require('express');
-const { getPapers } = require('../database/db');
+const { getPapers, updatePaperBookmarkStatus } = require('../database/db');
 
 const router = express.Router();
 
@@ -21,6 +21,16 @@ router.get('/', async (req, res) => {
         const papers = await getPapers(filters);
 
         res.json(papers);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/bookmark', async (req, res) => {
+    try {
+        const { arxiv_id, bookmarked } = req.body;
+        await updatePaperBookmarkStatus(arxiv_id, bookmarked);
+        res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

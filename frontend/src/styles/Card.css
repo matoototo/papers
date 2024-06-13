@@ -116,3 +116,12 @@
     color: var(--warning);
     opacity: 1.0;
 }
+
+.card .meta .date {
+    opacity: 0.5;
+    transition: opacity 0.4s;
+}
+
+.card .meta .date:hover {
+    opacity: 0.8;
+}

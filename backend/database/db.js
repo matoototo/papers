@@ -65,10 +65,15 @@ const updatePaperThumbnail = async (id, thumbnailUrl) => {
     await db.none('UPDATE arxiv_metadata SET thumbnail = $1 WHERE id = $2', [thumbnailUrl, id]);
 };
 
+const updatePaperBookmarkStatus = async (arxivId, bookmarked) => {
+    await db.none('UPDATE arxiv_metadata SET bookmarked = $1 WHERE arxiv_id = $2', [bookmarked, arxivId]);
+};
+
 module.exports = {
     insertPaper,
     getPaperByArxivId,
     getPapers,
     getPapersWithoutThumbnails,
-    updatePaperThumbnail
+    updatePaperThumbnail,
+    updatePaperBookmarkStatus,
 };
