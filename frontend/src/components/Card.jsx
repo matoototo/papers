@@ -13,9 +13,11 @@ const Card = ({ title, authors, abstract, date, url, thumbnail, hidden, bookmark
     const authorsString = authors.join(', ');
     const bookmarkClass = 'bookmark-icon' + (isBookmarked ? ' bookmarked' : '');
 
+    const thumbnailUrl = thumbnail ? `/api/${thumbnail}` : 'https://placehold.co/150x212';
+
     return (
         <div className="card">
-            <img src={thumbnail} alt={title} />
+            <img src={thumbnailUrl} alt={title} />
             <div className="content">
                 <h2 className="title">
                     <span className="title-text">{title}</span>

@@ -1,3 +1,4 @@
+// db.js
 const pgp = require('pg-promise')();
 const db = pgp(process.env.DATABASE_URL);
 
@@ -56,8 +57,18 @@ const getPapers = async (filters, page = 1, perPage = 20) => {
     return await db.any(query, values);
 };
 
+const getPapersWithoutThumbnails = async () => {
+    return await db.any('SELECT * FROM arxiv_metadata WHERE thumbnail IS NULL');
+};
+
+const updatePaperThumbnail = async (id, thumbnailUrl) => {
+    await db.none('UPDATE arxiv_metadata SET thumbnail = $1 WHERE id = $2', [thumbnailUrl, id]);
+};
+
 module.exports = {
     insertPaper,
     getPaperByArxivId,
     getPapers,
+    getPapersWithoutThumbnails,
+    updatePaperThumbnail
 };

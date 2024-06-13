@@ -41,7 +41,6 @@ const parseArxivResponse = (data) => {
             date,
             url,
             categories,
-            thumbnailUrl: 'https://placehold.co/150x212', // Placeholder thumbnail
             hidden: false,
             bookmarked: false,
         });
@@ -49,4 +48,6 @@ const parseArxivResponse = (data) => {
     return papers;
 };
 
-module.exports = fetchArxivPapers;
+module.exports = {
+    fetchArxivPapers,
+};
