@@ -16,7 +16,7 @@ const fetchArxivPapers = async (endTimestamp, categories = []) => {
             throw new Error('Failed to fetch papers from arXiv');
         }
     } while (results[results.length - 1] && results[results.length - 1].date >= endTimestamp);
-    return results;
+    return results.filter(paper => paper.date >= endTimestamp);
 };
 
 const parseArxivResponse = (data) => {
@@ -31,6 +31,7 @@ const parseArxivResponse = (data) => {
         const abstract = entry.getElementsByTagName('summary')[0].textContent;
         const date = entry.getElementsByTagName('published')[0].textContent;
         const url = entry.getElementsByTagName('id')[0].textContent;
+        const categories = Array.from(entry.getElementsByTagName('category')).map(category => category.getAttribute('term'));
 
         papers.push({
             id,
@@ -39,6 +40,7 @@ const parseArxivResponse = (data) => {
             abstract,
             date,
             url,
+            categories,
             thumbnailUrl: 'https://placehold.co/150x212', // Placeholder thumbnail
             hidden: false,
             bookmarked: false,

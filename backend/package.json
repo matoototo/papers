@@ -16,6 +16,7 @@
     "express": "^4.19.2",
     "express-ws": "^5.0.2",
     "jsdom": "^24.1.0",
+    "node-cron": "^3.0.3",
     "pdf-parse": "^1.1.1",
     "pdf2pic": "^3.1.1",
     "pg-promise": "^11.8.0"
