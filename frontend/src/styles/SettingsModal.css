@@ -1,0 +1,103 @@
+/* SettingsModal.css */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+    padding: 1.5em;
+    border: 1px solid var(--shadow-extra-weak);
+    box-shadow: var(--box-shadow-strong);
+    background-color: var(--primary);
+    border-radius: 6px;
+    width: 40%;
+    max-width: 800px;
+    min-width: min(500px, 90%);
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--modal-background);
+    z-index: 100;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.25em;
+    width: 100%;
+}
+
+.modal-title {
+    font-size: 1.5em;
+    font-weight: 400;
+    color: var(--text-color);
+    letter-spacing: 0.075em;
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 0.75em;
+    height: 100%;
+}
+
+.preference-label {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    text-align: start;
+    gap: 0.25em;
+}
+
+.modal-body label {
+    font-size: 1.1em;
+    color: var(--text-color);
+    font-weight: 400;
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.modal-body .sublabel {
+    font-size: 0.9em;
+    color: var(--text-color-weak);
+}
+
+.preference-text {
+    width: 100%;
+    min-height: 200px;
+    margin: 0.5em 0;
+    padding: 1em;
+    font-size: 1em;
+    border: 1px solid var(--shadow-extra-weak);
+    border-radius: 6px;
+    color: var(--text-color-weak);
+    background-color: var(--primary);
+    resize: none;
+    transition: border 0.2s, color 0.2s;
+}
+
+.preference-text:focus {
+    outline: none;
+    border: 1px solid var(--shadow-weak);
+    color: var(--text-color);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 0.5em;
+}
+
+.save-button:disabled:hover {
+    background-color: var(--primary);
+    color: var(--text-color-weak);
+}

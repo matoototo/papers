@@ -18,6 +18,7 @@ export const darkTheme = {
     '--box-shadow-strong': '#0f0f0faa 0px 15px 40px, #404040 0px 0px 0px 1px',
     '--box-shadow-weak': '#0f0f0f33 0px 10px 20px, #303030 0px 0px 0px 1px',
     '--scrollbar-width': '14px',
+    '--modal-background': '#00000044',
 }
 
 export const lightTheme = {
@@ -40,4 +41,5 @@ export const lightTheme = {
     '--box-shadow-strong': '#0F0F0F3A 0px 10px 20px',
     '--box-shadow-weak': '#0F0F0F0A 0px 3px 6px',
     '--scrollbar-width': '14px',
+    '--modal-background': '#00000022',
 };

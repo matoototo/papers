@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+html,
+body {
+  scrollbar-gutter: stable;
+}
+
 #root {
   max-width: 1280px;
   width: 100%;
@@ -5,6 +12,28 @@
   padding: 2rem;
   text-align: center;
   min-height: 100vh;
+}
+
+button {
+  cursor: pointer;
+  font-size: 1.0em;
+  border-radius: 6px;
+  padding: 0.4em 0.8em;
+  color: var(--text-color);
+  background-color: var(--primary);
+  box-shadow: var(--box-shadow-weak);
+  border: 1px solid var(--shadow-extra-weak);
+  transition: background-color 0.4s, color 0.4s;
+}
+
+button:hover {
+  background-color: var(--secondary);
+  color: var(--text-color-highlight);
+}
+
+button.active {
+  background-color: var(--secondary);
+  color: var(--text-color-highlight);
 }
 
 .outerContainer {
@@ -26,10 +55,9 @@
 .outerContainer .header h1 {
   font-size: 2em;
   color: var(--text-color);
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 0.05em;
   font-family: 'Poppins', sans-serif !important;
-  /* font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important; */
 }
 
 .outerContainer .search {

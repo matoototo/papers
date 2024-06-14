@@ -3,6 +3,7 @@ import debounce from 'lodash.debounce';
 
 import Card from './components/Card';
 import Filter from './components/Filter';
+import SettingsModal from './components/SettingsModal';
 import { darkTheme, lightTheme } from './themes';
 
 import './App.css';
@@ -16,6 +17,8 @@ const App = () => {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [showSettings, setShowSettings] = useState(false);
+    const [preferenceText, setPreferenceText] = useState(''); // TODO: Fetch from API
 
     const fetchPapers = (filter, page, searchTerm = '') => {
         setLoading(true);
@@ -71,7 +74,6 @@ const App = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [page, loading]);
 
-
     useEffect(() => {
         if (page > 1) {
             fetchPapers(activeFilter, page, searchTerm);
@@ -87,12 +89,21 @@ const App = () => {
         debouncedSearch(e.target.value);
     };
 
+    const handleSavePreferences = (text) => {
+        setPreferenceText(text);
+        setShowSettings(false);
+    };
+
+    const handleCancel = () => {
+        setShowSettings(false);
+    };
+
     return (
         <>
         <div className="outerContainer">
             <div className="header">
-                <h1>{activeFilter} Papers</h1>
-                <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
+                <h1>{activeFilter} Papers ✨</h1>
+                <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} setShowSettings={setShowSettings} />
             </div>
             <div className="search">
                 <input type="text" placeholder="Search..." onChange={handleSearchChange} />
@@ -103,6 +114,13 @@ const App = () => {
                 ))}
             </div>
             {loading && <div>Loading...</div>}
+            {showSettings && (
+                <SettingsModal
+                    preferenceText={preferenceText}
+                    onSave={handleSavePreferences}
+                    onCancel={handleCancel}
+                />
+            )}
         </div>
         </>
     );
