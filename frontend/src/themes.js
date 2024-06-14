@@ -16,8 +16,8 @@ export const darkTheme = {
     '--success': 'rgb(25, 135, 54)',
     '--box-shadow': '#0f0f0f66 0px 15px 40px, #505050 0px 0px 0px 1px',
     '--box-shadow-strong': '#0f0f0faa 0px 15px 40px, #404040 0px 0px 0px 1px',
-    '--box-shadow-weak': '#0f0f0f33 0px 5px 10px, #303030 0px 0px 0px 1px',
-    '--scrollbar-width': '12px',
+    '--box-shadow-weak': '#0f0f0f33 0px 10px 20px, #303030 0px 0px 0px 1px',
+    '--scrollbar-width': '14px',
 }
 
 export const lightTheme = {
@@ -38,6 +38,6 @@ export const lightTheme = {
     '--success': 'rgb(25, 135, 54)',
     '--box-shadow': '#0F0F0F1A 0px 5px 10px',
     '--box-shadow-strong': '#0F0F0F3A 0px 10px 20px',
-    '--box-shadow-weak': '#0F0F0F0A 0px 2px 5px',
-    '--scrollbar-width': '12px',
+    '--box-shadow-weak': '#0F0F0F0A 0px 3px 6px',
+    '--scrollbar-width': '14px',
 };

@@ -125,3 +125,40 @@
 .card .meta .date:hover {
     opacity: 0.8;
 }
+
+@media (max-width: 768px) {
+    .card {
+        flex-direction: column;
+        height: auto;
+        box-shadow: var(--box-shadow-weak);
+    }
+
+    .card img {
+        display: none;
+    }
+
+    .card .content {
+        margin-bottom: 1em;
+    }
+
+    .card .content .title {
+        font-size: 1.2em;
+    }
+
+    .card .content .authors {
+        font-size: 1em;
+    }
+
+    .card .meta {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        width: 100%;
+        padding-left: 0;
+    }
+
+    .card .meta .bookmark-icon {
+        transform: scaleY(1.25);
+
+    }
+}

@@ -63,13 +63,14 @@ const App = () => {
         const handleScroll = () => {
             if (window.innerHeight + document.documentElement.scrollTop
                 >= document.documentElement.offsetHeight - 200 && !loading) {
-                setPage(prevPage => prevPage + 1);
+                setPage(page + 1);
             }
         };
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [loading]);
+    }, [page, loading]);
+
 
     useEffect(() => {
         if (page > 1) {

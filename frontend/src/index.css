@@ -25,3 +25,24 @@ body {
 a {
   color: var(--text-color-highlight);
 }
+
+::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-highlight);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-color-weak);
+}
+
+::-webkit-scrollbar-corner {
+  background-color: var(--secondary);
+}
