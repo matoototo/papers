@@ -1,12 +1,18 @@
 // papers.js
 const express = require('express');
-const { getPapers, updatePaperBookmarkStatus } = require('../database/db');
+const { getPapers, updatePaperBookmarkStatus, fuzzySearchPapers } = require('../database/db');
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const { filter } = req.query;
+        const { filter, page = 1, perPage = 20, searchTerm } = req.query;
+
+        if (searchTerm) {
+            const papers = await fuzzySearchPapers(searchTerm, page, perPage);
+            return res.json(papers);
+        }
+
         const endDate = new Date();
         let startDate = new Date();
 
@@ -30,7 +36,7 @@ router.get('/', async (req, res) => {
             }
         };
 
-        const papers = await getPapers(filters);
+        const papers = await getPapers(filters, page, perPage);
 
         res.json(papers);
     } catch (error) {

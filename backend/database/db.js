@@ -1,6 +1,18 @@
 // db.js
 const pgp = require('pg-promise')();
 const db = pgp(process.env.DATABASE_URL);
+const fuzzysort = require('fuzzysort');
+
+const fuzzySearchPapers = async (searchTerm, page = 1, perPage = 20) => {
+    const papers = await db.any('SELECT * FROM arxiv_metadata');
+    const searchResults = fuzzysort.go(searchTerm, papers, {
+        keys: ['title', 'authors', 'abstract', 'categories'],
+        threshold: -10000,
+    });
+
+    const paginatedResults = searchResults.slice((page - 1) * perPage, page * perPage);
+    return paginatedResults.map(result => result.obj);
+};
 
 const insertPaper = async (paper) => {
     await db.none(`
@@ -76,4 +88,5 @@ module.exports = {
     getPapersWithoutThumbnails,
     updatePaperThumbnail,
     updatePaperBookmarkStatus,
+    fuzzySearchPapers,
 };
