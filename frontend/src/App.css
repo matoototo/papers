@@ -1,7 +1,60 @@
 #root {
   max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  min-height: 100vh;
 }
 
+.outerContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: start;
+  gap: 1.5em;
+}
+
+.outerContainer .header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.outerContainer .header h1 {
+  font-size: 2em;
+  color: var(--text-color);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  font-family: 'Poppins', sans-serif !important;
+  /* font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important; */
+}
+
+.outerContainer .search {
+  width: 100%;
+  margin-bottom: 0.5em;
+}
+
+.outerContainer .search input {
+  width: 100%;
+  font-size: 1.2em;
+  padding: 0.25em 0.5em;
+  color: var(--text-color);
+  background-color: var(--primary);
+  border: 1px solid var(--shadow-extra-weak);
+  border-radius: 6px;
+  box-shadow: var(--box-shadow-weak);
+}
+
+.outerContainer .search input::placeholder {
+  color: var(--text-color-weak);
+}
+
+.outerContainer .search input:focus {
+  outline: none;
+}
+
+.outerContainer .cardList {
+  width: 100%;
+}

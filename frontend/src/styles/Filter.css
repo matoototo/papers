@@ -1,0 +1,27 @@
+/* Filter.css */
+.filters {
+    display: flex;
+    gap: 0.5em;
+}
+
+.filters button {
+    cursor: pointer;
+    font-size: 1.0em;
+    border-radius: 6px;
+    padding: 0.4em 0.8em;
+    color: var(--text-color);
+    background-color: var(--primary);
+    box-shadow: var(--box-shadow-weak);
+    border: 1px solid var(--shadow-extra-weak);
+    transition: background-color 0.4s, color 0.4s;
+}
+
+.filters button:hover {
+    background-color: var(--secondary);
+    color: var(--text-color-highlight);
+}
+
+.filters button.active {
+    background-color: var(--secondary);
+    color: var(--text-color-highlight);
+}

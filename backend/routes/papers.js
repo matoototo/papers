@@ -6,10 +6,22 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
+        const { filter } = req.query;
         const endDate = new Date();
-        endDate.setDate(endDate.getDate());
-        const startDate = new Date();
-        startDate.setDate(startDate.getDate() - 1);
+        let startDate = new Date();
+
+        switch (filter) {
+            case 'Weekly':
+                startDate.setDate(endDate.getDate() - 7);
+                break;
+            case 'Monthly':
+                startDate.setMonth(endDate.getMonth() - 1);
+                break;
+            case 'Daily':
+            default:
+                startDate.setDate(endDate.getDate() - 1);
+                break;
+        }
 
         const filters = {
             timeSpan: {

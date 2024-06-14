@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
 import Card from './components/Card'
+import Filter from './components/Filter'
 import { darkTheme, lightTheme } from './themes'
 
 import './App.css'
@@ -11,6 +12,7 @@ const App = () => {
     );
 
     const [cardData, setCardData] = useState([]);
+    const [activeFilter, setActiveFilter] = useState('Daily');
 
     useEffect(() => {
         const themeStyles = systemDarkMode ? darkTheme : lightTheme;
@@ -28,19 +30,30 @@ const App = () => {
     }, []);
 
     useEffect(() => {
-        fetch('/api/papers')
+        fetch(`/api/papers?filter=${activeFilter}`)
             .then(res => res.json())
             .then(data => setCardData(data))
             .catch(err => console.error(err));
-    }, []);
+    }, [activeFilter]);
 
     return (
         <>
-            {cardData.map((card, index) => (
-                <Card key={index} {...card} />
-            ))}
+        <div className="outerContainer">
+            <div className="header">
+                <h1>{activeFilter} Papers</h1>
+                <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
+            </div>
+            <div className="search">
+                <input type="text" placeholder="Search..." />
+            </div>
+            <div className="cardList">
+                {cardData.map((card, index) => (
+                    <Card key={index} {...card} />
+                ))}
+            </div>
+        </div>
         </>
     )
 }
 
-export default App
+export default App;
