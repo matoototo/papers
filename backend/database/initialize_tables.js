@@ -31,7 +31,7 @@ const createTables = async (db) => {
             url TEXT,
             categories TEXT[],
             thumbnail TEXT,
-            abstract_embedding vector(512) DEFAULT NULL,
+            abstract_embedding vector(1024) DEFAULT NULL,
             hidden BOOLEAN DEFAULT FALSE,
             bookmarked BOOLEAN DEFAULT FALSE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

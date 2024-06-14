@@ -81,12 +81,22 @@ const updatePaperBookmarkStatus = async (arxivId, bookmarked) => {
     await db.none('UPDATE arxiv_metadata SET bookmarked = $1 WHERE arxiv_id = $2', [bookmarked, arxivId]);
 };
 
+const getPapersWithoutEmbeddings = async () => {
+    return await db.any('SELECT * FROM (SELECT * FROM arxiv_metadata LIMIT 10) AS subquery WHERE abstract_embedding IS NULL'); // TODO: Remove limit subquery
+}
+
+const updatePaperEmbedding = async (id, embedding) => {
+    await db.none('UPDATE arxiv_metadata SET abstract_embedding = $1 WHERE id = $2', [embedding, id]);
+};
+
 module.exports = {
     insertPaper,
     getPaperByArxivId,
     getPapers,
     getPapersWithoutThumbnails,
+    getPapersWithoutEmbeddings,
     updatePaperThumbnail,
     updatePaperBookmarkStatus,
+    updatePaperEmbedding,
     fuzzySearchPapers,
 };

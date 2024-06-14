@@ -59,10 +59,44 @@ const processThumbnailsTask = async (papers) => {
     }
 };
 
+const fetchEmbeddingsTask = async () => {
+    return await db.getPapersWithoutEmbeddings();
+};
+
+const processEmbeddingsTask = async (papers) => {
+    const embeddingsHost = process.env.EMBEDDINGS_HOST || 'localhost';
+    const embeddingsPort = process.env.EMBEDDINGS_PORT || 3002;
+    const embeddingsEndpoint = `http://${embeddingsHost}:${embeddingsPort}/embed_text`
+    const embeddingsSize = parseInt(process.env.EMBEDDINGS_SIZE) || 1024;
+
+    for (const paper of papers) {
+        try {
+            const response = await axios.post(embeddingsEndpoint, {
+                text: paper.abstract
+            });
+
+            const embedding = response.data.embedding;
+
+            if (Array.isArray(embedding) && embedding.length === embeddingsSize) {
+                await db.updatePaperEmbedding(paper.id, embedding);
+            } else {
+                console.error(`Invalid embedding for paper ${paper.arxiv_id}`);
+            }
+        } catch (error) {
+            console.error(`Error generating embedding for paper ${paper.arxiv_id}:`, error);
+        }
+    }
+};
+
 
 const thumbnailerTask = {
     fetch: fetchThumbnailsTask,
     process: processThumbnailsTask,
+};
+
+const embeddingsTask = {
+    fetch: fetchEmbeddingsTask,
+    process: processEmbeddingsTask,
 };
 
 const arxivTask = {
@@ -73,4 +107,5 @@ const arxivTask = {
 module.exports = {
     arxivTask,
     thumbnailerTask,
+    embeddingsTask,
 };
