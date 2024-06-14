@@ -16,7 +16,10 @@ const createTables = async (db) => {
             google_id VARCHAR(255) UNIQUE,
             google_token VARCHAR(2048),
             subscription_status VARCHAR(50) DEFAULT 'inactive',
-            subscription_id VARCHAR(255)
+            subscription_id VARCHAR(255),
+            preference_text TEXT,
+            preference_embedding vector(${process.env.EMBEDDINGS_SIZE}) DEFAULT NULL,
+            preference_categories VARCHAR(255)[] DEFAULT '{}',
         );
     `);
 
@@ -31,7 +34,7 @@ const createTables = async (db) => {
             url TEXT,
             categories TEXT[],
             thumbnail TEXT,
-            abstract_embedding vector(1024) DEFAULT NULL,
+            abstract_embedding vector(${process.env.EMBEDDINGS_SIZE}) DEFAULT NULL,
             hidden BOOLEAN DEFAULT FALSE,
             bookmarked BOOLEAN DEFAULT FALSE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
