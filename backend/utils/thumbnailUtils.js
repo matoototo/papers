@@ -1,5 +1,6 @@
 // thumbnailUtils.js
 const { fromPath } = require('pdf2pic');
+const pdfParse = require('pdf-parse');
 const sharp = require('sharp');
 
 const generateThumbnail = async (pdfPath, thumbnailPath) => {
@@ -26,6 +27,21 @@ const generateThumbnail = async (pdfPath, thumbnailPath) => {
     }
 };
 
+async function extractTextFromPDF(filename) {
+    if (!fs.existsSync(filename)) {
+        throw new Error('File not found');
+    }
+    const dataBuffer = fs.readFileSync(filename);
+    try {
+        const data = await pdfParse(dataBuffer);
+        return data.text;
+    } catch (error) {
+        console.error('Error extracting text from PDF:', error);
+        throw error;
+    }
+}
+
 module.exports = {
-    generateThumbnail
+    generateThumbnail,
+    extractTextFromPDF,
 };

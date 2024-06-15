@@ -14,7 +14,7 @@ const fuzzySearchPapers = async (searchTerm, page = 1, perPage = 20) => {
     return paginatedResults.map(result => result.obj);
 };
 
-const insertPaper = async (paper) => {
+const insertPaperMetadata = async (paper) => {
     await db.none(`
         INSERT INTO arxiv_metadata (arxiv_id, title, authors, abstract, date, url, categories, thumbnail)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
@@ -89,8 +89,16 @@ const updatePaperEmbedding = async (id, embedding) => {
     await db.none('UPDATE arxiv_metadata SET abstract_embedding = $1 WHERE id = $2', [embedding, id]);
 };
 
+const updatePaperSummary = async (id, summary) => {
+    await db.none('UPDATE arxiv_metadata SET summary = $1 WHERE id = $2', [summary, id]);
+};
+
+const updatePaperFullText = async (id, fullText) => {
+    await db.none('UPDATE arxiv_metadata SET full_text = $1 WHERE id = $2', [fullText, id]);
+};
+
 module.exports = {
-    insertPaper,
+    insertPaperMetadata,
     getPaperByArxivId,
     getPapers,
     getPapersWithoutThumbnails,
@@ -98,5 +106,7 @@ module.exports = {
     updatePaperThumbnail,
     updatePaperBookmarkStatus,
     updatePaperEmbedding,
+    updatePaperSummary,
+    updatePaperFullText,
     fuzzySearchPapers,
 };

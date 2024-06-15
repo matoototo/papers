@@ -27,12 +27,15 @@ const createTables = async (db) => {
         CREATE TABLE IF NOT EXISTS "arxiv_metadata" (
             id SERIAL PRIMARY KEY,
             arxiv_id VARCHAR(255) UNIQUE,
+            url TEXT,
             title TEXT,
             authors TEXT[],
             abstract TEXT,
             date TIMESTAMP,
-            url TEXT,
             categories TEXT[],
+
+            summary TEXT,
+            full_text TEXT,
             thumbnail TEXT,
             abstract_embedding vector(${process.env.EMBEDDINGS_SIZE}) DEFAULT NULL,
             hidden BOOLEAN DEFAULT FALSE,

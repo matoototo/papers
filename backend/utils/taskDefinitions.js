@@ -5,7 +5,7 @@ const axios = require('axios');
 
 const db = require('../database/db');
 const { fetchArxivPapers } = require('../utils/arxivUtils');
-const { generateThumbnail } = require('../utils/thumbnailUtils');
+const { generateThumbnail, extractTextFromPDF } = require('../utils/thumbnailUtils');
 
 const fetchArxivTask = async (lastExecutionTime) => {
     const categories = ['cs.AI', 'stat.ML'];
@@ -17,7 +17,7 @@ const processArxivTask = async (papers) => {
     for (const paper of papers) {
         const existingPaper = await db.getPaperByArxivId(paper.id);
         if (!existingPaper) {
-            await db.insertPaper(paper);
+            await db.insertPaperMetadata(paper);
         }
     }
 };
@@ -51,6 +51,9 @@ const processThumbnailsTask = async (papers) => {
 
             thumbnailPath = await generateThumbnail(pdfPath, thumbnailPath);
             await db.updatePaperThumbnail(paper.id, thumbnailPath.replace('./thumbnails/', '/thumbnails/'));
+
+            const paperText = await extractTextFromPDF(pdfPath);
+            await db.updatePaperFullText(paper.id, paperText);
 
             fs.unlinkSync(pdfPath);
             await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -88,7 +91,6 @@ const processEmbeddingsTask = async (papers) => {
         }
     }
 };
-
 
 const thumbnailerTask = {
     fetch: fetchThumbnailsTask,
