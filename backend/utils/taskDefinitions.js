@@ -31,10 +31,11 @@ const processThumbnailsTask = async (papers) => {
         const pdfPath = path.join('/tmp', `${paper.arxiv_id}.pdf`);
         let thumbnailPath = path.join('./thumbnails', `${paper.arxiv_id}.png`);
 
-        // Download PDF temporarily
         try {
             const pdfUrl = paper.url.replace('abs', 'pdf').replace('arxiv.org', 'export.arxiv.org') + '.pdf';
             const response = await axios.get(pdfUrl, { responseType: 'stream' });
+            // remove if exists, can happen if server crashes during processing
+            if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
             const writer = fs.createWriteStream(pdfPath);
 
             response.data.pipe(writer);

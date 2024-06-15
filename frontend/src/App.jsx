@@ -57,7 +57,6 @@ const App = () => {
     }, []);
 
     useEffect(() => {
-        setCardData([]);
         setPage(1);
         fetchPapers(activeFilter, 1, searchTerm);
     }, [activeFilter, searchTerm]);
@@ -113,7 +112,6 @@ const App = () => {
                     <Card key={index} {...card} />
                 ))}
             </div>
-            {loading && <div>Loading...</div>}
             {showSettings && (
                 <SettingsModal
                     preferenceText={preferenceText}

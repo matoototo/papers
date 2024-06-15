@@ -12,6 +12,7 @@ const fetchArxivPapers = async (endTimestamp, categories = []) => {
             const response = await axios.get(query);
             results = results.concat(parseArxivResponse(response.data));
             start += perRequest;
+            await new Promise((resolve) => setTimeout(resolve, 3000));
         } catch (error) {
             throw new Error('Failed to fetch papers from arXiv');
         }

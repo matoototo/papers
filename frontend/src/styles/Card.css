@@ -11,6 +11,19 @@
     box-shadow: var(--box-shadow);
     box-sizing: border-box;
     border-radius: 6px;
+    cursor: pointer;
+}
+
+.card.expanded {
+    height: 100%;
+}
+
+.card.expanded .content .abstract {
+    -webkit-line-clamp: unset;
+}
+
+.card.expanded img {
+    display: none;
 }
 
 .card img {
@@ -34,8 +47,8 @@
     flex-direction: column;
     align-items: start;
     justify-content: start;
-    min-width: 0; /* Allow flex items to shrink properly */
-    overflow: hidden; /* Prevent overflow */
+    min-width: 0;
+    overflow: hidden;
 }
 
 .card .content .title {
@@ -87,6 +100,54 @@
     text-overflow: ellipsis;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
+}
+
+.card .content .markdown {
+    text-align: justify;
+    width: 100%;
+}
+
+.card .content .markdown p {
+    margin: 0.5em 0;
+}
+
+.card .content .markdown h1,
+.card .content .markdown h2,
+.card .content .markdown h3,
+.card .content .markdown h4,
+.card .content .markdown h5,
+.card .content .markdown h6 {
+    margin: 1em 0 0.75em;
+    font-weight: 550;
+}
+
+.card .content .markdown ol,
+.card .content .markdown ul {
+    margin: 0.5em 0;
+}
+
+.card .content .markdown strong,
+.card .content .markdown b,
+.card .content .markdown th {
+    font-weight: 550;
+}
+
+.card .content .markdown table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+}
+
+.card .content .markdown table th,
+.card .content .markdown table td {
+    border: 1px solid var(--shadow-extra-weak);
+    padding: 0.5em;
+}
+
+.katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
 }
 
 .card .meta {
