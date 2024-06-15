@@ -13,7 +13,7 @@ const App = () => {
         window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
     );
     const [cardData, setCardData] = useState([]);
-    const [activeFilter, setActiveFilter] = useState('Daily');
+    const [activeFilter, setActiveFilter] = useState(localStorage.getItem('activeFilter') || 'Daily');
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
@@ -97,12 +97,17 @@ const App = () => {
         setShowSettings(false);
     };
 
+    const handleFilterChange = (filter) => {
+        setActiveFilter(filter);
+        localStorage.setItem('activeFilter', filter);
+    };
+
     return (
         <>
         <div className="outerContainer">
             <div className="header">
                 <h1>{activeFilter} Papers ✨</h1>
-                <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} setShowSettings={setShowSettings} />
+                <Filter activeFilter={activeFilter} setActiveFilter={handleFilterChange} setShowSettings={setShowSettings} />
             </div>
             <div className="search">
                 <input type="text" placeholder="Search..." onChange={handleSearchChange} />

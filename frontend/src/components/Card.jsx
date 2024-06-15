@@ -78,8 +78,20 @@ const Card = ({ arxiv_id, title, authors, abstract, date, url, thumbnail, hidden
         });
     };
 
+    const handleExpand = (event) => {
+        const excludeClasses = ['bookmark-icon', 'icon'];
+        const excludeElements = ['svg', 'path'];
+        const containsExcluded = excludeClasses.some(className => event.target.classList.contains(className)) || excludeElements.includes(event.target.tagName);
+
+        if (containsExcluded || window.getSelection().toString()) {
+            return;
+        }
+
+        setExpanded(!isExpanded);
+    }
+
     return (
-        <div className={expandedClass} onClick={() => setExpanded(!isExpanded)}>
+        <div className={expandedClass} onClick={handleExpand}>
             <img src={thumbnailUrl} alt={title} />
             <div className="content">
                 <h2 className="title">

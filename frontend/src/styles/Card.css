@@ -134,14 +134,35 @@
 
 .card .content .markdown table {
     width: 100%;
-    border-collapse: collapse;
+    border-spacing: 0;
+    border-collapse: separate;
     margin: 1em 0;
+}
+
+.card .content .markdown table th:first-child {
+    border-top-left-radius: 6px;
+}
+
+.card .content .markdown table th:last-child {
+    border-top-right-radius: 6px;
+}
+
+.card .content .markdown table td:first-child {
+    border-bottom-left-radius: 6px;
+}
+
+.card .content .markdown table td:last-child {
+    border-bottom-right-radius: 6px;
+}
+
+.card .content .markdown table th {
+    background-color: var(--secondary);
 }
 
 .card .content .markdown table th,
 .card .content .markdown table td {
     border: 1px solid var(--shadow-extra-weak);
-    padding: 0.5em;
+    padding: 0.25em 0.5em;
 }
 
 .katex-display {
