@@ -1,6 +1,6 @@
 // papers.js
 const express = require('express');
-const { getPapers, updatePaperBookmarkStatus, fuzzySearchPapers } = require('../database/db');
+const { getPapers, updatePaperBookmarkStatus, fuzzySearchPapers, getPaperSummary } = require('../database/db');
 
 const router = express.Router();
 
@@ -53,5 +53,25 @@ router.post('/bookmark', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+router.get('/summary/:arxivId', async (req, res) => {
+    const { arxivId } = req.params;
+
+    try {
+        res.setHeader('Content-Type', 'text/plain');
+        const summaryGenerator = getPaperSummary(arxivId);
+        for await (const chunk of summaryGenerator) {
+            res.write(chunk);
+        }
+        res.end();
+    } catch (error) {
+        if (!res.headersSent) {
+            res.status(500).json({ error: error.message });
+        } else {
+            console.error('Failed to send error response:', error.message);
+        }
+    }
+});
+
 
 module.exports = router;

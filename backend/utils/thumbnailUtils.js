@@ -1,4 +1,5 @@
 // thumbnailUtils.js
+const fs = require('fs');
 const { fromPath } = require('pdf2pic');
 const pdfParse = require('pdf-parse');
 const sharp = require('sharp');

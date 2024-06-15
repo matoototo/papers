@@ -3,8 +3,10 @@ const pgp = require('pg-promise')();
 const db = pgp(process.env.DATABASE_URL);
 const fuzzysort = require('fuzzysort');
 
+const { streamSummary } = require('../utils/generativeUtils');
+
 const fuzzySearchPapers = async (searchTerm, page = 1, perPage = 20) => {
-    const papers = await db.any('SELECT * FROM arxiv_metadata');
+    const papers = await db.any('SELECT * FROM arxiv_metadata WHERE full_text IS NOT NULL');
     const searchResults = fuzzysort.go(searchTerm, papers, {
         keys: ['title', 'authors', 'abstract', 'categories'],
         threshold: -10000,
@@ -31,11 +33,11 @@ const insertPaperMetadata = async (paper) => {
 };
 
 const getPaperByArxivId = async (arxivId) => {
-    return await db.oneOrNone('SELECT id FROM arxiv_metadata WHERE arxiv_id = $1', [arxivId]);
+    return await db.oneOrNone('SELECT * FROM arxiv_metadata WHERE arxiv_id = $1', [arxivId]);
 };
 
 const getPapers = async (filters, page = 1, perPage = 20) => {
-    let whereClauses = [];
+    let whereClauses = ['full_text IS NOT NULL'];
     let values = [];
     let orderByClause = '';
     let offset = (page - 1) * perPage;
@@ -93,9 +95,40 @@ const updatePaperSummary = async (id, summary) => {
     await db.none('UPDATE arxiv_metadata SET summary = $1 WHERE id = $2', [summary, id]);
 };
 
-const updatePaperFullText = async (id, fullText) => {
-    await db.none('UPDATE arxiv_metadata SET full_text = $1 WHERE id = $2', [fullText, id]);
+const sanitizeText = (text) => {
+    return text.replace(/[\x00-\x1F\x7F]/g, '');
 };
+
+const updatePaperFullText = async (id, fullText) => {
+    const sanitizedText = sanitizeText(fullText);
+    await db.none('UPDATE arxiv_metadata SET full_text = $1 WHERE id = $2', [sanitizedText, id]);
+};
+
+async function* getPaperSummary(arxivId) {
+    const paper = await getPaperByArxivId(arxivId);
+    if (!paper) {
+        throw new Error(`Paper with arxiv_id ${arxivId} not found`);
+    }
+
+    if (paper.summary) {
+        yield paper.summary;
+    } else {
+        if (!paper.full_text) {
+            throw new Error(`Full text for paper with arxiv_id ${arxivId} not available`);
+        }
+
+        const summaryStream = streamSummary(paper.full_text);
+        let summary = '';
+        for await (const chunk of summaryStream) {
+            if (chunk !== undefined) {
+                summary += chunk;
+                yield chunk;
+            }
+        }
+        await updatePaperSummary(paper.id, summary);
+    }
+}
+
 
 module.exports = {
     insertPaperMetadata,
@@ -109,4 +142,5 @@ module.exports = {
     updatePaperSummary,
     updatePaperFullText,
     fuzzySearchPapers,
+    getPaperSummary,
 };

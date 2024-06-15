@@ -1,5 +1,5 @@
 // Card.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
@@ -14,7 +14,7 @@ import '../styles/Card.css';
 const Card = ({ arxiv_id, title, authors, abstract, date, url, thumbnail, hidden, bookmarked }) => {
     const [isExpanded, setExpanded] = useState(false);
     const [isBookmarked, setBookmarked] = useState(bookmarked);
-    const [markdownText, setMarkdownText] = useState(abstract); // TODO: Stream from API
+    const [markdownText, setMarkdownText] = useState('');
 
     const authorsString = authors.join(', ');
     const expandedClass = 'card' + (isExpanded ? ' expanded' : '');
@@ -43,6 +43,32 @@ const Card = ({ arxiv_id, title, authors, abstract, date, url, thumbnail, hidden
             console.error('Failed to update bookmark status:', error);
         }
     };
+
+    const fetchSummary = async () => {
+        try {
+            const response = await fetch(`/api/papers/summary/${arxiv_id}`);
+            if (response.ok) {
+                const reader = response.body.getReader();
+                let receivedText = '';
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    receivedText += new TextDecoder("utf-8").decode(value);
+                    setMarkdownText(receivedText);
+                }
+            } else {
+                console.error('Failed to fetch summary:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Failed to fetch summary:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (isExpanded && markdownText === '') {
+            fetchSummary();
+        }
+    }, [isExpanded]);
 
     const InlineLatex = ({ children }) => {
         const latexContent = children.map(child =>

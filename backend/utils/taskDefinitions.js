@@ -8,7 +8,8 @@ const { fetchArxivPapers } = require('../utils/arxivUtils');
 const { generateThumbnail, extractTextFromPDF } = require('../utils/thumbnailUtils');
 
 const fetchArxivTask = async (lastExecutionTime) => {
-    const categories = ['cs.AI', 'stat.ML'];
+    // const categories = ['cs.AI', 'stat.ML'];
+    const categories = [];
     const papers = await fetchArxivPapers(lastExecutionTime, categories);
     return papers;
 };
@@ -56,10 +57,10 @@ const processThumbnailsTask = async (papers) => {
             await db.updatePaperFullText(paper.id, paperText);
 
             fs.unlinkSync(pdfPath);
-            await new Promise((resolve) => setTimeout(resolve, 1000));
         } catch (error) {
             console.error(`Error processing paper ${paper.arxiv_id}:`, error);
         }
+        await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 };
 
