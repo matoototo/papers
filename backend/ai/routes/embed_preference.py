@@ -1,4 +1,3 @@
-import os
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough
@@ -34,6 +33,8 @@ chain = (
     | RunnableLambda(lambda x: [x['input']['preference']] + x['output']) \
     | RunnableLambda(lambda x: x * abstracts_per_preference) \
     | abstract_chain.map() \
-    | RunnableLambda(lambda x: embeddings_model.embed_documents(x)) \
+    | RunnableLambda(embeddings_model.embed_documents) \
     | RunnableLambda(lambda x: np.mean(x, axis=0).tolist())
-).with_types(input_type=preference_prompt.input_schema)
+)
+
+chain = chain.with_types(input_type=preference_prompt.input_schema)

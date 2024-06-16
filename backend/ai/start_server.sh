@@ -14,7 +14,6 @@ fi
 
 pip install -q --requirement ai/requirements.txt
 
-# export LANGCHAIN_TRACING_V2="true"
 python3 ai/server.py
 
 while ! curl -s $URL >/dev/null; do
