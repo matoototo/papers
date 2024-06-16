@@ -19,7 +19,7 @@ const createTables = async (db) => {
             subscription_id VARCHAR(255),
             preference_text TEXT,
             preference_embedding vector(${process.env.EMBEDDINGS_SIZE}) DEFAULT NULL,
-            preference_categories VARCHAR(255)[] DEFAULT '{}',
+            preference_categories VARCHAR(255)[] DEFAULT '{}'
         );
     `);
 

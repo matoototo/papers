@@ -54,7 +54,7 @@ const App = () => {
             console.error(error);
         }
     };
-    
+
     useEffect(() => {
         fetchPreferences();
     }, []);
@@ -125,6 +125,9 @@ const App = () => {
         } finally {
             setSavingPreferenceText(false);
             setShowSettings(false);
+
+            setPage(1);
+            fetchPapers(activeFilter, 1, searchTerm);
         }
     };
 

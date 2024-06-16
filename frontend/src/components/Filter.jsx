@@ -1,6 +1,5 @@
 // Filter.jsx
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter';
 import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
 
 import '../styles/Filter.css';

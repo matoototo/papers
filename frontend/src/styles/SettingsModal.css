@@ -97,7 +97,30 @@
     margin-top: 0.5em;
 }
 
+.save-button {
+    display: flex;
+    width: 76px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
 .save-button:disabled:hover {
     background-color: var(--primary);
     color: var(--text-color-weak);
+}
+
+.spinner {
+    border: 2px solid var(--secondary);
+    border-top: 2px solid var(--text-color-weak);
+    border-radius: 50%;
+    align-self: center;
+    width: 1em;
+    height: 1em;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

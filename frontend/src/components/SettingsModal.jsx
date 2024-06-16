@@ -42,11 +42,14 @@ const SettingsModal = ({ preferenceText, onSave, onCancel, saving }) => {
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         placeholder="Enter a description of your interests here."
+                        disabled={saving}
                     />
                 </div>
                 <div className="modal-footer">
-                    <button className="save-button" onClick={handleSave} disabled={saving}>Save</button>
-                    <button className="cancel-button" onClick={onCancel}>Cancel</button>
+                    <button className="save-button" onClick={handleSave} disabled={saving}>
+                        {saving ? <div className="spinner"></div> : 'Save'}
+                    </button>
+                    <button className="cancel-button" onClick={onCancel} disabled={saving}>Cancel</button>
                 </div>
             </div>
         </div>
