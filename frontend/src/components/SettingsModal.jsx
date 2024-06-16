@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import '../styles/SettingsModal.css';
 
-const SettingsModal = ({ preferenceText, onSave, onCancel }) => {
+const SettingsModal = ({ preferenceText, onSave, onCancel, saving }) => {
     const [text, setText] = useState(preferenceText);
     const [isDirty, setDirty] = useState(false);
 
@@ -45,7 +45,7 @@ const SettingsModal = ({ preferenceText, onSave, onCancel }) => {
                     />
                 </div>
                 <div className="modal-footer">
-                    <button className="save-button" onClick={handleSave}>Save</button>
+                    <button className="save-button" onClick={handleSave} disabled={saving}>Save</button>
                     <button className="cancel-button" onClick={onCancel}>Cancel</button>
                 </div>
             </div>

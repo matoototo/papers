@@ -129,6 +129,24 @@ async function* getPaperSummary(arxivId) {
     }
 }
 
+const getUser = async (id) => {
+    return await db.one('SELECT * FROM "user" WHERE id = $1', [id]);
+};
+
+const updateUser = async (id, data) => {
+    const keys = Object.keys(data);
+    const values = Object.values(data);
+
+    if (keys.length === 0) {
+        throw new Error('No fields to update');
+    }
+
+    const setClause = keys.map((key, index) => `"${key}" = $${index + 2}`).join(', ');
+    const query = `UPDATE "user" SET ${setClause} WHERE id = $1`;
+
+    await db.none(query, [id, ...values]);
+};
+
 
 module.exports = {
     insertPaperMetadata,
@@ -143,4 +161,6 @@ module.exports = {
     updatePaperFullText,
     fuzzySearchPapers,
     getPaperSummary,
+    getUser,
+    updateUser,
 };

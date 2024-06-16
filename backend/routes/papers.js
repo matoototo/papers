@@ -1,11 +1,14 @@
 // papers.js
 const express = require('express');
-const { getPapers, updatePaperBookmarkStatus, fuzzySearchPapers, getPaperSummary } = require('../database/db');
+const { getPapers, updatePaperBookmarkStatus, fuzzySearchPapers, getPaperSummary, getUser } = require('../database/db');
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
+        const userId = 1; // TODO: Get from request
+        const user = await getUser(userId);
+
         const { filter, page = 1, perPage = 20, searchTerm } = req.query;
 
         if (searchTerm) {
@@ -33,7 +36,8 @@ router.get('/', async (req, res) => {
             timeSpan: {
                 start: startDate.toISOString().split('T')[0],
                 end: endDate.toISOString().split('T')[0]
-            }
+            },
+            embedding: user.preference_embedding,
         };
 
         const papers = await getPapers(filters, page, perPage);

@@ -14,6 +14,7 @@ if (!fs.existsSync('./thumbnails')) {
 app.use('/thumbnails', express.static(path.join(__dirname, '/thumbnails')));
 
 const papersRouter = require('./routes/papers');
+const userRouter = require('./routes/user');
 const taskScheduler = require('./utils/taskScheduler');
 const { arxivTask, thumbnailerTask, embeddingsTask } = require('./utils/taskDefinitions');
 const { startAIServer } = require('./utils/aiServer.js');
@@ -23,6 +24,7 @@ app.use(bodyParser.json());
 const PORT = process.env.PORT || 3001;
 
 app.use('/papers', papersRouter);
+app.use('/user', userRouter);
 
 app.listen(PORT, async () => {
     startAIServer();

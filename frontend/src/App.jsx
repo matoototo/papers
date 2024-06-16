@@ -19,6 +19,7 @@ const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [showSettings, setShowSettings] = useState(false);
     const [preferenceText, setPreferenceText] = useState(''); // TODO: Fetch from API
+    const [savingPreferenceText, setSavingPreferenceText] = useState(false);
 
     const fetchPapers = (filter, page, searchTerm = '') => {
         setLoading(true);
@@ -40,6 +41,23 @@ const App = () => {
                 setLoading(false);
             });
     };
+
+    const fetchPreferences = async () => {
+        try {
+            const response = await fetch('/api/user/preferences');
+            if (!response.ok) {
+                throw new Error('Failed to fetch preferences');
+            }
+            const data = await response.json();
+            setPreferenceText(data.preferenceText);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    
+    useEffect(() => {
+        fetchPreferences();
+    }, []);
 
     useEffect(() => {
         const themeStyles = systemDarkMode ? darkTheme : lightTheme;
@@ -88,9 +106,26 @@ const App = () => {
         debouncedSearch(e.target.value);
     };
 
-    const handleSavePreferences = (text) => {
-        setPreferenceText(text);
-        setShowSettings(false);
+    const handleSavePreferences = async (text) => {
+        setSavingPreferenceText(true);
+        try {
+            const response = await fetch('/api/user/preferences', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ preferenceText: text }),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to save preferences');
+            }
+            setPreferenceText(text);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setSavingPreferenceText(false);
+            setShowSettings(false);
+        }
     };
 
     const handleCancel = () => {
@@ -122,6 +157,7 @@ const App = () => {
                     preferenceText={preferenceText}
                     onSave={handleSavePreferences}
                     onCancel={handleCancel}
+                    saving={savingPreferenceText}
                 />
             )}
         </div>
