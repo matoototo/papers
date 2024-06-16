@@ -96,7 +96,7 @@ const processEmbeddingsTask = async (papers) => {
                 text: paper.abstract
             });
 
-            const embedding = response.data.embedding;
+            const embedding = response.data;
 
             if (Array.isArray(embedding) && embedding.length === embeddingsSize) {
                 await db.updatePaperEmbedding(paper.id, embedding);

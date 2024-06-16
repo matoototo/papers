@@ -1,12 +1,14 @@
 import os
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from langserve import add_routes
 from routes.suggest_categories import chain as suggest_categories_chain
 from routes.embed_preference import chain as embed_preference_chain
+from routes.summarize import chain as summarize_chain
 from models.embeddings import model as embeddings_model
 
-class EmbedTextRequest(BaseModel):
+class TextRequest(BaseModel):
     text: str
 
 app = FastAPI(title="Papers AI Server")
@@ -15,17 +17,16 @@ add_routes(app, suggest_categories_chain, path="/suggest_categories")
 add_routes(app, embed_preference_chain, path="/embed_preference")
 
 @app.post("/embed_text")
-async def embed_text(body: EmbedTextRequest):
-    text = body.text
+async def embed_text(body: TextRequest):
+    return embeddings_model.embed_query(body.text)
 
-    if not text:
-        raise HTTPException(status_code=400, detail="Text is required")
+@app.post("/summarize")
+async def summarize(body: TextRequest):
+    async def generator():
+        async for chunk in summarize_chain.astream(body.text):
+            yield chunk.content
 
-    try:
-        embedding = embeddings_model.embed_query(text)
-        return {"embedding": embedding}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    return StreamingResponse(generator(), media_type="text/plain")
 
 if __name__ == "__main__":
     import uvicorn

@@ -15,6 +15,7 @@
 }
 
 .card.expanded {
+    min-height: 240px;
     height: 100%;
 }
 

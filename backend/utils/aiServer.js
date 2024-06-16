@@ -1,6 +1,9 @@
 const { spawn } = require('child_process');
 const fetch = require('node-fetch');
+const { encode } = require('gpt-tokenizer');
 const { AI_HOST, AI_PORT } = process.env;
+
+const AI_BASE = `http://${AI_HOST || 'localhost'}:${AI_PORT || 3002}`;
 
 const startAIServer = () => {
     const process = spawn('sh', ['ai/start_server.sh']);
@@ -24,7 +27,7 @@ const startAIServer = () => {
 };
 
 const getPreferenceEmbedding = async (preference) => {
-    const response = await fetch(`http://${AI_HOST || 'localhost'}:${AI_PORT || 3002}/embed_preference/invoke`, {
+    const response = await fetch(`${AI_BASE}/embed_preference/invoke`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -40,7 +43,32 @@ const getPreferenceEmbedding = async (preference) => {
     return data.output;
 };
 
+const trimText = (text, maxTokens) => {
+    let trimmedText = text;
+    while (encode(trimmedText).length > maxTokens) {
+        trimmedText = trimmedText.slice(0, Math.floor(trimmedText.length * 0.98));
+    }
+    return trimmedText;
+}
+
+async function* streamSummary(text) {
+    const trimmedText = trimText(text, 10000); // 10k is reasonable, avoid blowing up with really large papers
+
+    const response = await fetch(`${AI_BASE}/summarize`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: trimmedText }),
+    });
+
+    for await (const chunk of response.body) {
+        yield chunk;
+    }
+}
+
 module.exports = {
     startAIServer,
     getPreferenceEmbedding,
+    streamSummary,
 }

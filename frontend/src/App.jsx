@@ -127,8 +127,7 @@ const App = () => {
             setShowSettings(false);
 
             setPage(1);
-            setFilterState('Daily');
-            fetchPapers('Daily', 1, searchTerm);
+            fetchPapers(filterState, 1, searchTerm);
         }
     };
 
@@ -141,11 +140,13 @@ const App = () => {
         localStorage.setItem('filterState', filter);
     };
 
+    const headerTitle = filterState === 'Bookmarked' ? 'Bookmarks' : `${filterState} Papers ✨`;
+
     return (
         <>
         <div className="outerContainer">
             <div className="header">
-                <h1>{filterState} Papers ✨</h1>
+                <h1>{headerTitle}</h1>
                 <Filter filterState={filterState} setFilterState={handleFilterChange} setShowSettings={setShowSettings} />
             </div>
             <div className="search">

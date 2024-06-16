@@ -3,7 +3,7 @@ const pgp = require('pg-promise')();
 const db = pgp(process.env.DATABASE_URL);
 const fuzzysort = require('fuzzysort');
 
-const { streamSummary } = require('../utils/generativeUtils');
+const { streamSummary } = require('../utils/aiServer');
 
 const fuzzySearchPapers = async (searchTerm, page = 1, perPage = 20, bookmarkedOnly = false) => {
     const bookmarkedClause = bookmarkedOnly ? 'AND bookmarked = true' : '';
