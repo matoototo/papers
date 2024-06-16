@@ -1,0 +1,7 @@
+python-dotenv
+langchain
+openai
+langchain-openai
+langchain-nvidia-ai-endpoints
+langserve[all]
+pydantic==1.10.13 # LangChain: If you need to see the docs, you can downgrade to pydantic 1. For example, `pip install pydantic==1.10.13`. See https://github.com/tiangolo/fastapi/issues/10360 for details.

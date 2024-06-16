@@ -1,6 +1,0 @@
-Flask
-langchain-nvidia-ai-endpoints
-python-dotenv
-openai
-langchain
-langchain-openai

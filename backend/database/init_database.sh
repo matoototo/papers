@@ -37,6 +37,7 @@ until docker exec -it $POSTGRES_CONTAINER_NAME pg_isready; do
 done
 
 # Run the Python script to initialize tables
+export EMBEDDINGS_SIZE
 node initialize_tables.js --host $POSTGRES_HOST --port $POSTGRES_PORT --user $POSTGRES_USER --password $POSTGRES_PASSWORD
 
 echo "Setup complete!"

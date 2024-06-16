@@ -16,7 +16,7 @@ app.use('/thumbnails', express.static(path.join(__dirname, '/thumbnails')));
 const papersRouter = require('./routes/papers');
 const taskScheduler = require('./utils/taskScheduler');
 const { arxivTask, thumbnailerTask, embeddingsTask } = require('./utils/taskDefinitions');
-const { startEmbeddingsServer } = require('./utils/embeddingsServer.js');
+const { startAIServer } = require('./utils/aiServer.js');
 
 app.use(bodyParser.json());
 
@@ -25,7 +25,7 @@ const PORT = process.env.PORT || 3001;
 app.use('/papers', papersRouter);
 
 app.listen(PORT, async () => {
-    startEmbeddingsServer();
+    startAIServer();
 
     const lastExecutionTime = new Date();
     lastExecutionTime.setDate(lastExecutionTime.getDate() - 7);
