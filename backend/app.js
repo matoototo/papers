@@ -37,7 +37,7 @@ app.listen(PORT, async () => {
     await taskScheduler.runTaskOnce(embeddingsTask, lastExecutionTime.toISOString());
 
     taskScheduler.addTask("*/10 * * * *", arxivTask, new Date().toISOString());
-    taskScheduler.addTask("*/1 * * * *", thumbnailerTask, new Date().toISOString());
+    taskScheduler.addTask("*/10 * * * *", thumbnailerTask, new Date().toISOString());
     taskScheduler.addTask("*/10 * * * *", embeddingsTask, new Date().toISOString());
     taskScheduler.startAllTasks();
 

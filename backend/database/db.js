@@ -84,7 +84,7 @@ const updatePaperBookmarkStatus = async (arxivId, bookmarked) => {
 };
 
 const getPapersWithoutEmbeddings = async () => {
-    return await db.any('SELECT * FROM (SELECT * FROM arxiv_metadata LIMIT 10) AS subquery WHERE abstract_embedding IS NULL'); // TODO: Remove limit subquery
+    return await db.any('SELECT * FROM arxiv_metadata WHERE abstract_embedding IS NULL');
 }
 
 const updatePaperEmbedding = async (id, embedding) => {

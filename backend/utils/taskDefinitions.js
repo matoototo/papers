@@ -27,28 +27,44 @@ const fetchThumbnailsTask = async () => {
     return await db.getPapersWithoutThumbnails();
 };
 
+const downloadPDF = async (pdfUrl, pdfPath) => {
+    const response = await axios.get(pdfUrl, { responseType: 'stream' });
+    // remove if exists, can happen if server crashes during processing
+    if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
+    const writer = fs.createWriteStream(pdfPath);
+
+    response.data.pipe(writer);
+
+    await new Promise((resolve, reject) => {
+        writer.on('finish', resolve);
+        writer.on('error', reject);
+    });
+
+    // check if file exists and is at least 30kb
+    if (!fs.existsSync(pdfPath) || fs.statSync(pdfPath).size < 30000) {
+        throw new Error(`Failed to download PDF: ${pdfPath} from ${pdfUrl}`);
+    }
+};
+
 const processThumbnailsTask = async (papers) => {
     for (const paper of papers) {
         const pdfPath = path.join('/tmp', `${paper.arxiv_id}.pdf`);
         let thumbnailPath = path.join('./thumbnails', `${paper.arxiv_id}.png`);
 
         try {
-            const pdfUrl = paper.url.replace('abs', 'pdf').replace('arxiv.org', 'export.arxiv.org') + '.pdf';
-            const response = await axios.get(pdfUrl, { responseType: 'stream' });
-            // remove if exists, can happen if server crashes during processing
-            if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
-            const writer = fs.createWriteStream(pdfPath);
+            const exportPdfUrl = paper.url.replace('abs', 'pdf').replace('arxiv.org', 'export.arxiv.org') + '.pdf';
+            const arxivPdfUrl = paper.url.replace('abs', 'pdf') + '.pdf';
 
-            response.data.pipe(writer);
-
-            await new Promise((resolve, reject) => {
-                writer.on('finish', resolve);
-                writer.on('error', reject);
-            });
-
-            if (!fs.existsSync(pdfPath)) {
-                throw new Error(`Failed to download PDF: ${pdfPath}`);
+            try {
+                await downloadPDF(exportPdfUrl, pdfPath);
+            } catch (error) {
+                // console.error(`Failed to download from export.arxiv.org, trying arxiv.org:`, error);
+                await downloadPDF(arxivPdfUrl, pdfPath);
+                // Be super nice to arXiv as we're hitting the user-facing server
+                await new Promise((resolve) => setTimeout(resolve, 5000));
             }
+
+            if (!fs.existsSync(pdfPath)) throw new Error(`Failed to download PDF after trying both URLs: ${paper.arxiv_id}`);
 
             thumbnailPath = await generateThumbnail(pdfPath, thumbnailPath);
             await db.updatePaperThumbnail(paper.id, thumbnailPath.replace('./thumbnails/', '/thumbnails/'));
@@ -87,6 +103,7 @@ const processEmbeddingsTask = async (papers) => {
             } else {
                 console.error(`Invalid embedding for paper ${paper.arxiv_id}`);
             }
+            await new Promise((resolve) => setTimeout(resolve, 200));
         } catch (error) {
             console.error(`Error generating embedding for paper ${paper.arxiv_id}:`, error);
         }
