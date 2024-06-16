@@ -13,7 +13,7 @@ const App = () => {
         window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
     );
     const [cardData, setCardData] = useState([]);
-    const [activeFilter, setActiveFilter] = useState(localStorage.getItem('activeFilter') || 'Daily');
+    const [filterState, setFilterState] = useState(localStorage.getItem('filterState') || 'Daily');
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
@@ -21,10 +21,10 @@ const App = () => {
     const [preferenceText, setPreferenceText] = useState(''); // TODO: Fetch from API
     const [savingPreferenceText, setSavingPreferenceText] = useState(false);
 
-    const fetchPapers = (filter, page, searchTerm = '') => {
+    const fetchPapers = (filterState, page, searchTerm = '') => {
         setLoading(true);
         const url = new URL('/api/papers', window.location.origin);
-        url.searchParams.append('filter', filter);
+        url.searchParams.append('filter', filterState);
         url.searchParams.append('page', page);
         if (searchTerm) {
             url.searchParams.append('searchTerm', searchTerm);
@@ -76,8 +76,8 @@ const App = () => {
 
     useEffect(() => {
         setPage(1);
-        fetchPapers(activeFilter, 1, searchTerm);
-    }, [activeFilter, searchTerm]);
+        fetchPapers(filterState, 1, searchTerm);
+    }, [filterState, searchTerm]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -93,7 +93,7 @@ const App = () => {
 
     useEffect(() => {
         if (page > 1) {
-            fetchPapers(activeFilter, page, searchTerm);
+            fetchPapers(filterState, page, searchTerm);
         }
     }, [page]);
 
@@ -127,7 +127,8 @@ const App = () => {
             setShowSettings(false);
 
             setPage(1);
-            fetchPapers(activeFilter, 1, searchTerm);
+            setFilterState('Daily');
+            fetchPapers('Daily', 1, searchTerm);
         }
     };
 
@@ -136,23 +137,23 @@ const App = () => {
     };
 
     const handleFilterChange = (filter) => {
-        setActiveFilter(filter);
-        localStorage.setItem('activeFilter', filter);
+        setFilterState(filter);
+        localStorage.setItem('filterState', filter);
     };
 
     return (
         <>
         <div className="outerContainer">
             <div className="header">
-                <h1>{activeFilter} Papers ✨</h1>
-                <Filter activeFilter={activeFilter} setActiveFilter={handleFilterChange} setShowSettings={setShowSettings} />
+                <h1>{filterState} Papers ✨</h1>
+                <Filter filterState={filterState} setFilterState={handleFilterChange} setShowSettings={setShowSettings} />
             </div>
             <div className="search">
                 <input type="text" placeholder="Search..." onChange={handleSearchChange} />
             </div>
             <div className="cardList">
                 {cardData.map((card, index) => (
-                    <Card key={index} {...card} />
+                    <Card {...card} key={card.arxiv_id} />
                 ))}
             </div>
             {showSettings && (

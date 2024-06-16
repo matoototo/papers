@@ -5,8 +5,9 @@ const fuzzysort = require('fuzzysort');
 
 const { streamSummary } = require('../utils/generativeUtils');
 
-const fuzzySearchPapers = async (searchTerm, page = 1, perPage = 20) => {
-    const papers = await db.any('SELECT * FROM arxiv_metadata WHERE full_text IS NOT NULL');
+const fuzzySearchPapers = async (searchTerm, page = 1, perPage = 20, bookmarkedOnly = false) => {
+    const bookmarkedClause = bookmarkedOnly ? 'AND bookmarked = true' : '';
+    const papers = await db.any('SELECT * FROM arxiv_metadata WHERE full_text IS NOT NULL ' + bookmarkedClause);
     const searchResults = fuzzysort.go(searchTerm, papers, {
         keys: ['title', 'authors', 'abstract', 'categories'],
         threshold: -10000,
@@ -36,13 +37,17 @@ const getPaperByArxivId = async (arxivId) => {
     return await db.oneOrNone('SELECT * FROM arxiv_metadata WHERE arxiv_id = $1', [arxivId]);
 };
 
-const getPapers = async (filters, page = 1, perPage = 20) => {
+const getPapers = async (filters, page = 1, perPage = 20, bookmarkedOnly = false) => {
     let whereClauses = ['full_text IS NOT NULL'];
     let values = [];
     let orderByClause = '';
     let offset = (page - 1) * perPage;
 
-    if (filters.timeSpan) {
+    if (bookmarkedOnly) {
+        whereClauses.push('bookmarked = true');
+    }
+
+    if (filters.timeSpan && !bookmarkedOnly) {
         whereClauses.push('date BETWEEN $1 AND $2');
         values.push(filters.timeSpan.start);
         values.push(filters.timeSpan.end);

@@ -17,7 +17,7 @@ const papersRouter = require('./routes/papers');
 const userRouter = require('./routes/user');
 const taskScheduler = require('./utils/taskScheduler');
 const { arxivTask, thumbnailerTask, embeddingsTask } = require('./utils/taskDefinitions');
-const { startAIServer } = require('./utils/aiServer.js');
+const { startAIServer } = require('./utils/aiServer');
 
 app.use(bodyParser.json());
 

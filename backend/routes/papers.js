@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
         const { filter, page = 1, perPage = 20, searchTerm } = req.query;
 
         if (searchTerm) {
-            const papers = await fuzzySearchPapers(searchTerm, page, perPage);
+            const papers = await fuzzySearchPapers(searchTerm, page, perPage, filter === 'Bookmarked');
             return res.json(papers);
         }
 
@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
             embedding: user.preference_embedding,
         };
 
-        const papers = await getPapers(filters, page, perPage);
+        const papers = await getPapers(filters, page, perPage, filter === 'Bookmarked');
 
         res.json(papers);
     } catch (error) {

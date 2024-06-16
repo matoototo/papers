@@ -4,3 +4,19 @@
     gap: 0.5em;
 }
 
+.bookmark {
+    color: var(--secondary-highlight);
+    transform: scaleY(1.2);
+    transition: color 0.2s, opacity 0.2s, background-color 0.2s;
+}
+
+.filter:hover .bookmark {
+    color: var(--warning);
+    opacity: 0.8;
+}
+
+.bookmark.bookmarked {
+    color: var(--warning);
+    opacity: 1.0;
+    background-color: var(--secondary);
+}
