@@ -1,38 +1,61 @@
 const axios = require('axios');
-const { JSDOM } = require('jsdom');
+const cheerio = require('cheerio');
 
-const fetchArxivPapers = async (endTimestamp, categories = []) => {
+const fetchArxivPapers = async (endTimestamp, categories) => {
     let results = [];
-    let start = 0;
-    const perRequest = 100;
-    const categoryQuery = categories.length > 0 ? `cat:${categories.join('+cat:')}` : 'all';
+
+    const toDate = new Date().toISOString().split('T')[0];
+    const fromDate = new Date(endTimestamp).toISOString().split('T')[0];
+    let resumptionToken = null;
+
     do {
         try {
-            const query = `http://export.arxiv.org/api/query?search_query=${categoryQuery}&sortBy=submittedDate&sortOrder=descending&max_results=${start + perRequest}&start=${start}`;
+            let query = `http://export.arxiv.org/oai2?verb=ListRecords&from=${fromDate}&until=${toDate}&metadataPrefix=arXiv`;
+            if (resumptionToken) query = `http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=${resumptionToken}`;
             const response = await axios.get(query);
-            results = results.concat(parseArxivResponse(response.data));
-            start += perRequest;
-            await new Promise((resolve) => setTimeout(resolve, 3000));
+            const parsedData = parseArxivResponse(response.data);
+            results = results.concat(parsedData.records);
+            resumptionToken = parsedData.resumptionToken;
+            await new Promise((resolve) => setTimeout(resolve, 5000));
         } catch (error) {
-            throw new Error('Failed to fetch papers from arXiv');
+            throw new Error(`Failed to fetch papers from arXiv with error: ${error}`);
         }
-    } while (results[results.length - 1] && results[results.length - 1].date >= endTimestamp);
-    return results.filter(paper => paper.date >= endTimestamp);
+    } while (resumptionToken);
+
+    const filteredResults = results.filter(paper =>
+        new Date(paper.date).getTime() >= new Date(endTimestamp).getTime() &&
+        (categories.length === 0 ||
+        categories.some(category => paper.categories.some(paperCategory => paperCategory.startsWith(category))))
+    );
+
+    console.log(`Fetched ${results.length} papers from arXiv, with filtering it is: ${filteredResults.length}`);
+    return filteredResults;
 };
 
-const parseArxivResponse = (data) => {
-    const dom = new JSDOM(data);
-    const entries = dom.window.document.getElementsByTagName('entry');
-    const papers = [];
 
-    for (let entry of entries) {
-        const id = entry.getElementsByTagName('id')[0].textContent.split('/').pop();
-        const title = entry.getElementsByTagName('title')[0].textContent;
-        const authors = Array.from(entry.getElementsByTagName('author')).map(author => author.getElementsByTagName('name')[0].textContent);
-        const abstract = entry.getElementsByTagName('summary')[0].textContent;
-        const date = entry.getElementsByTagName('published')[0].textContent;
-        const url = entry.getElementsByTagName('id')[0].textContent;
-        const categories = Array.from(entry.getElementsByTagName('category')).map(category => category.getAttribute('term'));
+const parseArxivResponse = (data) => {
+    const $ = cheerio.load(data, { xmlMode: true });
+    const records = $('record');
+    const papers = [];
+    let resumptionToken = null;
+
+    records.each((i, record) => {
+        const metadata = $(record).find('metadata');
+        const arxiv = metadata.find('arXiv');
+        const id = arxiv.find('id').text();
+        const title = arxiv.find('title').text();
+        const authors = [];
+
+        arxiv.find('author').each((i, author) => {
+            const keyname = $(author).find('keyname').text();
+            const forenames = $(author).find('forenames').text();
+            authors.push(`${forenames} ${keyname}`);
+        });
+
+        const abstract = arxiv.find('abstract').text();
+        const date = arxiv.find('created').text();
+        const url = `https://arxiv.org/abs/${id}`;
+        const categories = arxiv.find('categories').text().split(' ');
 
         papers.push({
             id,
@@ -45,8 +68,14 @@ const parseArxivResponse = (data) => {
             hidden: false,
             bookmarked: false,
         });
+    });
+
+    const resumptionTokenElement = $('resumptionToken');
+    if (resumptionTokenElement.length > 0) {
+        resumptionToken = resumptionTokenElement.text();
     }
-    return papers;
+
+    return { records: papers, resumptionToken };
 };
 
 module.exports = {
