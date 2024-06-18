@@ -1,5 +1,3 @@
-Yes, it's a good practice to include a section for the license and authors in the README file. Here's how you can format it:
-
 # Papers
 
 Personal research assistant that suggests recent papers from arXiv based on your preferences.
