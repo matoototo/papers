@@ -1,3 +1,5 @@
+Yes, it's a good practice to include a section for the license and authors in the README file. Here's how you can format it:
+
 # Papers
 
 Personal research assistant that suggests recent papers from arXiv based on your preferences.
@@ -57,3 +59,7 @@ npm run dev
 ```
 
 The app will be available at the URL shown in the terminal.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
