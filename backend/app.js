@@ -28,6 +28,7 @@ app.use('/user', userRouter);
 
 app.listen(PORT, async () => {
     startAIServer();
+    await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait for AI server to start
 
     const lastExecutionTime = new Date();
     lastExecutionTime.setDate(lastExecutionTime.getDate() - 7);

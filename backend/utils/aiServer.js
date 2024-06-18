@@ -52,7 +52,7 @@ const trimText = (text, maxTokens) => {
 }
 
 async function* streamSummary(text) {
-    const trimmedText = trimText(text, 10000); // 10k is reasonable, avoid blowing up with really large papers
+    const trimmedText = trimText(text, 7000);
 
     const response = await fetch(`${AI_BASE}/summarize`, {
         method: 'POST',

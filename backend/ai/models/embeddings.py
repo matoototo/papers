@@ -1,7 +1,7 @@
 import os
-from langchain_openai import OpenAIEmbeddings
+from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings
 
-model = OpenAIEmbeddings(
-    model=os.environ.get("EMBEDDINGS_MODEL", "text-embedding-3-large"),
+model = NVIDIAEmbeddings(
+    model=os.environ.get("EMBEDDINGS_MODEL", "nvidia/nv-embed-v1"),
     dimensions=int(os.environ.get("EMBEDDINGS_SIZE", 1024))
 )

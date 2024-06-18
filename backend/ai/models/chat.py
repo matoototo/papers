@@ -1,4 +1,4 @@
 import os
-from langchain_openai import ChatOpenAI
+from langchain_nvidia_ai_endpoints import ChatNVIDIA
 
-model = ChatOpenAI(model=os.environ.get("CHAT_MODEL", "gpt-4o"))
+model = ChatNVIDIA(model=os.environ.get("CHAT_MODEL", "meta/llama3-70b-instruct"))
